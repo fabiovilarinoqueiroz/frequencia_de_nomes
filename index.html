@@ -1,0 +1,84 @@
+<html lang="pt-br">
+	<head>
+		<meta charset="utf-8">
+		<title>App Pesquisa Endereço</title>
+		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+
+		<script>
+			function getDadosNome(nome) {
+
+				let url = 'https://servicodados.ibge.gov.br/api/v2/censos/nomes/' + nome 
+
+				let xmlHttp = new XMLHttpRequest()
+				xmlHttp.open('GET', url)
+
+				xmlHttp.onreadystatechange = () => {
+					if(xmlHttp.readyState == 4 && xmlHttp.status == 200) {
+						let dadosJSONText = xmlHttp.responseText
+						let dadosJSONObj = JSON.parse(dadosJSONText)
+ 
+						for(let i in dadosJSONObj[0].res){
+							let item = dadosJSONObj[0].res[i]
+							
+							//console.log(item)
+
+
+							let linha1 = document.createElement('td');
+							linha1.className = 'row';
+
+							let linha2 = document.createElement('td');
+							linha2.className = 'row';
+
+							console.log('Período: ' + item.periodo)
+
+							
+							linha1.innerHTML = item.periodo 
+							linha2.innerHTML = item.frequencia 
+
+							document.getElementById('periodo').appendChild(linha1);
+							document.getElementById('frequencia').appendChild(linha2)
+
+						}
+						
+						
+					}
+				}
+
+				xmlHttp.send()
+			}
+		</script>
+
+	</head>
+	<body>
+		
+		<nav class="navbar navbar-light bg-light mb-4">
+			<div class="container">
+				<div class="navbar-brand mb-0 h1">
+					<h3>Pesquise a Frequência do Seu Nome</h3>
+				</div>
+			</div>
+		</nav>
+
+		<div class="container">
+			<div class="row form-group">
+				<div class="col-sm-3">
+					<input type="text" class="form-control" placeholder="NOME" onblur="getDadosNome(this.value)" />
+				</div>
+
+				<div class="container mt-5">
+					<table class="table table-striped table-dark">
+					  <thead>
+					    <tr>
+					      <th scope="col" class="text-center" id="periodo">Período</th>
+					      <th scope="col" class="text-center" id="frequencia">Frequência</th>
+					    </tr>
+					  </thead>
+					  <tbody>
+					  </tbody>
+					</table>
+				</div>
+				
+			</div>
+		</div>
+	</body>
+</html>
